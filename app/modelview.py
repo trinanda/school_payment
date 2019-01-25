@@ -5,7 +5,9 @@ from flask import abort, redirect, url_for, request
 from flask_admin.contrib import sqla
 from sqlalchemy import func
 from flask_security import current_user
-from app.models import Student
+from werkzeug.security import generate_password_hash
+
+from app.models import Student, Parent
 
 
 def generator_random(size=10, chars=string.ascii_uppercase + string.digits):
@@ -58,7 +60,11 @@ class SchoolAdminModelView(sqla.ModelView):
 
 
 class ParentModelView(SchoolAdminModelView):
-    pass
+    form_excluded_columns = ('created_at', 'updated_at')
+
+    def on_model_change(self, form, model, is_created):
+        if form.password_hash.data:
+            model.password_hash = generate_password_hash(form.password_hash.data)
 
 
 class StudentModelView(SchoolAdminModelView):
