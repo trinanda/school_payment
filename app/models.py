@@ -17,7 +17,7 @@ class Parent(UserMixin, db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow())
 
     def __repr__(self):
-        return '{}'.format(self.id)
+        return 'ID: {} |*| Name: {}'.format(self.id, self.name)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -40,9 +40,10 @@ class Student(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow())
     parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'))
     school_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    parent = db.relationship('Parent', backref=db.backref('student', lazy='dynamic'))
 
     def __repr__(self):
-        return '{}'.format(self.student_registration_number)
+        return 'Registration Number: {} |*| Name: {}'.format(self.student_registration_number, self.name)
 
 
 class BillStatus(enum.Enum):
