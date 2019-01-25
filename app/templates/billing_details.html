@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Student Registration Number</th>
+            <th>Name</th>
+            <th>Major</th>
+            <th>Bill Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ student_data.student_registration_number }}</td>
+            <td>{{ student_data.name }}</td>
+            <td>{{ student_data.major }}</td>
+            <td>${{ bill_total.total_bill }}.00 USD</td>
+          </tr>
+        </tbody>
+      </table>
+        <div id="paypal-button" style="float: right;"></div>
+        <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+        <script>
+            var CREATE_PAYMENT_URL  = 'http://127.0.0.1:5000/payment/' + {{ student_data.id }};
+            var EXECUTE_PAYMENT_URL = 'http://127.0.0.1:5000/execute/' + {{ student_data.id }};
+
+            paypal.Button.render({
+
+                env: 'sandbox', // Or 'sandbox'
+
+                commit: true, // Show a 'Pay Now' button
+
+                payment: function() {
+                    return paypal.request.post(CREATE_PAYMENT_URL).then(function(data) {
+                        return data.paymentID;
+                    });
+                },
+
+                onAuthorize: function(data) {
+                    return paypal.request.post(EXECUTE_PAYMENT_URL, {
+                        paymentID: data.paymentID,
+                        payerID:   data.payerID
+                    }).then(function(res) {
+
+                        console.log(res.success)
+                        // The payment is complete!
+                        // You can now show a confirmation message to the customer
+                    });
+                }
+
+            }, '#paypal-button');
+        </script>
+    </div>
+</body>
+</html>
+{% endblock %}

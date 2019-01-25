@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="w3-container">
+        <div style="display: flex; justify-content: space-between">
+            <h2>{{ current_user.name }} Children Data</h2>
+        </div>
+        {% for data in your_children_data %}
+        <a href="{{ url_for('billing_details', student_id=data.id) }}">
+            <ul class="w3-ul w3-card-4">
+                <li class="w3-bar">
+                    <img src="#" class="w3-bar-item w3-circle w3-hide-small" style="width:85px">
+                    <div class="w3-bar-item">
+                        <span class="w3-large"><b>{{ data.name }}</b></span><br>
+                        <span>{{ data.major }}</span>
+                        <p>{{ data.student_registration_number }}</p>
+                    </div>
+                </li>
+            </ul>
+        </a>
+        {% endfor %}
+    </div>
+{% endblock %}
