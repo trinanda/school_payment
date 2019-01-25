@@ -62,6 +62,9 @@ class ParentModelView(SchoolAdminModelView):
 
 
 class StudentModelView(SchoolAdminModelView):
+
+    form_excluded_columns = ('student_registration_number', 'created_at', 'updated_at')
+
     def get_query(self):
         # return Student.query.filter_by(school_id=current_user.id)
         return self.session.query(self.model).filter(
@@ -78,7 +81,6 @@ class StudentModelView(SchoolAdminModelView):
             model.school_id = current_user.id
             model.student_registration_number = generator_random()
 
-    form_excluded_columns = ('student_registration_number')
 
 class BillModelView(SchoolAdminModelView):
     column_list = ('student_id', 'total_bill', 'bill_status')
