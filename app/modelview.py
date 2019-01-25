@@ -7,11 +7,12 @@ from sqlalchemy import func
 from flask_security import current_user
 from werkzeug.security import generate_password_hash
 
-from app.models import Student, Parent
+from app.models import Student
 
 
 def generator_random(size=10, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for x in range(size))
+
 
 class SuperUserModelView(sqla.ModelView):
 

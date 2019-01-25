@@ -15,6 +15,7 @@ class Parent(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     created_at = db.Column(db.DateTime, default=datetime.utcnow())
     updated_at = db.Column(db.DateTime, default=datetime.utcnow())
+    active = db.Column(db.Boolean())
 
     def __repr__(self):
         return 'ID: {} |*| Name: {}'.format(self.id, self.name)

@@ -13,7 +13,7 @@ class Config(object):
     SQLALCHEMY_ECHO = True
 
     # FLask-Security config
-    SECURITY_URL_PREFIX = "/admin"
+    SECURITY_URL_PREFIX = "/admin_school"
     SECURITY_PASSWORD_HASH = "pbkdf2_sha512"
     SECURITY_PASSWORD_SALT = "AS878jhjsdjh#@$!^"
 
