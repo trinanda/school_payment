@@ -13,7 +13,7 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
-login.login_view = 'login'
+login.login_view = 'parent_login'
 login.login_message = 'Please log in to access this page.'
 mail = Mail(app)
 bootstrap = Bootstrap(app)
@@ -23,4 +23,4 @@ from app.models import User, Role
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
 
-from app import models, parent, admin
+from app import admin, models, parent

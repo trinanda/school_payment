@@ -1,8 +1,7 @@
 from datetime import datetime
 import enum
 
-from flask_security import UserMixin
-from flask_security import RoleMixin
+from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import db, login
@@ -67,6 +66,8 @@ roles_users = db.Table(
     db.Column('role_id', db.Integer(), db.ForeignKey('role.id'))
 )
 
+
+from flask_security import UserMixin, RoleMixin
 
 class Role(db.Model, RoleMixin):
     id = db.Column(db.Integer(), primary_key=True)

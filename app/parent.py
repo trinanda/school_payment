@@ -15,30 +15,30 @@ paypalrestsdk.configure({
   "client_secret": "EGBwKFjVmOzzll6Tgp5VK8u1I9HyMjwZMhq1K29YThDyHkDJMZPBXkYzaeBly-IsZ8udwfqK1-mfy66X"})
 
 
-@app.route('/')
+# @app.route('/')
 @app.route('/parent_dashboard')
 @login_required
-def index():
+def parent_dashboard():
     your_children_data = db.session.query(
         Student.id, Student.name, Student.major,
         Student.student_registration_number).filter_by(parent_id=current_user.id).all()
     return render_template('parent_dashboard.html', your_children_data=your_children_data)
 
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
+@app.route('/parent_login', methods=['GET', 'POST'])
+def parent_login():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('parent_dashboard'))
     form = LoginForm()
     if form.validate_on_submit():
         user = Parent.query.filter_by(email=form.email.data).first()
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
-            return redirect(url_for('login'))
+            return redirect(url_for('parent_login'))
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
-            next_page = url_for('index')
+            next_page = url_for('parent_dashboard')
         return redirect(next_page)
     return render_template('login.html', form=form)
 
@@ -46,13 +46,13 @@ def login():
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('parent_dashboard'))
 
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('parent_dashboard'))
     form = RegistrationParentForm()
     if form.validate_on_submit():
         user = Parent(name=form.name.data, email=form.email.data)

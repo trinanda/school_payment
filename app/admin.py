@@ -1,16 +1,16 @@
 import flask_admin
 from flask import url_for
 from flask_admin import helpers as admin_helpers
-from app import app, Role, db, User, security
-from app.models import Parent, Student, Bill
-from app.modelview import ParentModelView, StudentModelView, BillModelView, RoleModelView, UserModelView
+
+from app import app, db, security
+from app.models import Parent, Student, Bill, Role, User
+from app.modelview import StudentModelView, BillModelView, RoleModelView, UserModelView
 
 admin = flask_admin.Admin(app, 'Admin Dashboard',
                           base_template='my_master.html',
                           template_mode='bootstrap3')
 
 # Add model views
-admin.add_view(ParentModelView(Parent, db.session))
 admin.add_view(StudentModelView(Student, db.session))
 admin.add_view(BillModelView(Bill, db.session))
 admin.add_view(RoleModelView(Role, db.session))

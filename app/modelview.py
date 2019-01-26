@@ -2,7 +2,9 @@ import random
 import string
 
 from flask import abort, redirect, url_for, request
+from flask_admin import expose, BaseView
 from flask_admin.contrib import sqla
+from flask_admin.model.template import EndpointLinkRowAction
 from sqlalchemy import func
 from flask_security import current_user
 from werkzeug.security import generate_password_hash
@@ -14,7 +16,9 @@ def generator_random(size=10, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for x in range(size))
 
 
-class SuperUserModelView(sqla.ModelView):
+class SuperUseAccess(sqla.ModelView):
+
+    form_excluded_columns = ('created_at', 'updated_at')
 
     def is_accessible(self):
         if not current_user.is_active or not current_user.is_authenticated:
@@ -37,7 +41,7 @@ class SuperUserModelView(sqla.ModelView):
                 return redirect(url_for('security.login', next=request.url))
 
 
-class SchoolAdminModelView(sqla.ModelView):
+class SchoolAdminAccess(sqla.ModelView):
 
     def is_accessible(self):
         if not current_user.is_active or not current_user.is_authenticated:
@@ -60,15 +64,16 @@ class SchoolAdminModelView(sqla.ModelView):
                 return redirect(url_for('security.login', next=request.url))
 
 
-class ParentModelView(SchoolAdminModelView):
-    form_excluded_columns = ('created_at', 'updated_at')
+# class ParentModelView(SchoolAdminAccess):
+#
+#     form_excluded_columns = ('created_at', 'updated_at')
+#
+#     # def on_model_change(self, form, model, is_created):
+#     #     if form.password_hash.data:
+#     #         model.password_hash = generate_password_hash(form.password_hash.data)
 
-    def on_model_change(self, form, model, is_created):
-        if form.password_hash.data:
-            model.password_hash = generate_password_hash(form.password_hash.data)
 
-
-class StudentModelView(SchoolAdminModelView):
+class StudentModelView(SchoolAdminAccess):
 
     form_excluded_columns = ('student_registration_number', 'created_at', 'updated_at')
 
@@ -89,14 +94,30 @@ class StudentModelView(SchoolAdminModelView):
             model.student_registration_number = generator_random()
 
 
-class BillModelView(SchoolAdminModelView):
-    column_list = ('student_id', 'total_bill', 'bill_status')
+class BillModelView(SchoolAdminAccess):
+    column_list = ('student_id', 'total_bill')
+
+    # can_create = False
+    # can_edit = False
+    # can_delete = False
+    # list_template = './templates/index.html'
+    # can_export = True
+    # edit_modal = True
+    # create_modal = True
+    # can_view_details = True
+    # details_modal = True
+    #
+    # column_editable_list = ['total_bill']
+    # column_searchable_list = column_editable_list
+    # column_exclude_list = ['total_bill']
+    # form_excluded_columns = column_exclude_list
+    # column_details_exclude_list = column_exclude_list
+    # column_filters = column_editable_list
+
+
+class RoleModelView(SuperUseAccess):
     pass
 
 
-class RoleModelView(SuperUserModelView):
-    pass
-
-
-class UserModelView(SuperUserModelView):
+class UserModelView(SuperUseAccess):
     pass

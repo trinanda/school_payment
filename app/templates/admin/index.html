@@ -13,6 +13,10 @@
                     <a class="btn btn-primary" href="{{ url_for('security.login') }}">login</a> <a class="btn btn-default" href="{{ url_for('security.register') }}">register</a>
                 </p>
                 {% endif %}
+                {% if current_user.has_role('parent') %}
+                    <h1>Hello orangtua</h1>
+                    <button>click this</button>
+                {% endif %}
                 <!--<p>-->
                     <!--<a class="btn btn-primary" href="/"><i class="glyphicon glyphicon-chevron-left"></i>Back</a>-->
                 <!--</p>-->
