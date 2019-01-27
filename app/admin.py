@@ -5,7 +5,7 @@ from flask_admin import helpers as admin_helpers
 from app import app, db, security
 from app.models import Student, Bill, Role, Parent, School
 from app.modelview import StudentModelView, BillModelView, RoleModelView, ParentModelView, \
-    SchoolModelView
+    SchoolModelView, ParentView
 
 admin = flask_admin.Admin(app, '#',
                           base_template='my_master.html',
@@ -17,6 +17,7 @@ admin.add_view(BillModelView(Bill, db.session))
 admin.add_view(RoleModelView(Role, db.session))
 admin.add_view(ParentModelView(Parent, db.session))
 admin.add_view(SchoolModelView(School, db.session))
+admin.add_view(ParentView(name='Your Children Bill', endpoint='yourchildbill'))
 
 
 # define a context processor for merging flask-admin's template context into the flask-security views.
