@@ -96,7 +96,7 @@ class StudentModelView(SchoolAdminAccess):
     create_modal = True
     can_view_details = True
     details_modal = True
-    form_excluded_columns = ('student_registration_number', 'created_at', 'updated_at')
+    form_excluded_columns = ('student_registration_number', 'created_at', 'updated_at', 'Bill')
 
     def get_query(self):
         # return Student.query.filter_by(school_id=current_user.id)
@@ -116,17 +116,16 @@ class StudentModelView(SchoolAdminAccess):
 
 
 class BillModelView(SchoolAdminAccess):
-    column_list = ('student_id', 'total_bill')
-
+    # column_list = ('student_id', 'total_bill')
+    form_excluded_columns = ('created_at', 'updated_at')
     # can_create = False
     # can_edit = False
     # can_delete = False
-    # list_template = './templates/index.html'
     # can_export = True
-    # edit_modal = True
-    # create_modal = True
-    # can_view_details = True
-    # details_modal = True
+    edit_modal = True
+    create_modal = True
+    can_view_details = True
+    details_modal = True
     #
     # column_editable_list = ['total_bill']
     # column_searchable_list = column_editable_list

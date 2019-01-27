@@ -39,7 +39,6 @@ class User(db.Model, UserMixin):
         'with_polymorphic': '*'
     }
 
-
     def __str__(self):
         return self.email
 
@@ -71,9 +70,9 @@ class Student(db.Model):
     major = db.Column(db.String(50))
     school_id = db.Column(db.Integer, db.ForeignKey('school.id'))
     parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'))
+    bill_id = db.Column(db.Integer, db.ForeignKey('bill.id'))
 
     parent = db.relationship('Parent', backref=db.backref('Student', lazy='dynamic'))
-
 
     def __repr__(self):
         return 'Student Registration Number: {} |*| Name: {}'.format(self.student_registration_number, self.name)
@@ -86,8 +85,11 @@ class BillStatus(enum.Enum):
 
 class Bill(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
     bill_status = db.Column(db.Enum(BillStatus, name='bill_status', default=BillStatus.PENDING))
     total_bill = db.Column(db.Integer)
     created_at = db.Column(db.DateTime, default=datetime.utcnow())
     updated_at = db.Column(db.DateTime, default=datetime.utcnow())
+    student = db.relationship('Student', backref=db.backref('Bill'))
+
+    def __repr__(self):
+        return '${} USD'.format(self.total_bill)
