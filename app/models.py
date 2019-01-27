@@ -71,6 +71,8 @@ class Student(db.Model):
     school_id = db.Column(db.Integer, db.ForeignKey('school.id'))
     parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'))
     bill_id = db.Column(db.Integer, db.ForeignKey('bill.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow())
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow())
 
     parent = db.relationship('Parent', backref=db.backref('Student', lazy='dynamic'))
 

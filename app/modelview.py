@@ -66,7 +66,8 @@ class SchoolAdminAccess(sqla.ModelView):
 
 class StudentModelView(SchoolAdminAccess):
     # form_columns = ['name', 'major']
-    column_exclude_list = ('created_at', 'updated_at')
+    column_list = ('name', 'student_registration_number', 'major', 'parent', 'created_at', 'updated_at', 'Bill')
+    # column_exclude_list = ('created_at', 'updated_at')
     edit_modal = True
     create_modal = True
     can_view_details = True
@@ -181,9 +182,8 @@ class SchoolModelView(SuperUseAccess):
 class ParentView(BaseView):
     @expose('/')
     def index(self):
-        data = 'test123123'
-        student = db.session.query(Student).filter_by(parent_id=current_user.id).all()
+        student = db.session.query(Student.name, Student.student_registration_number,
+                                   Bill.total_bill).join(Bill).filter(Student.bill_id == Bill.id).\
+            filter(Student.parent_id==current_user.id).all()
         print('test', student)
-        # student = student.name
-        return self.render('admin/index.html', student=student)
-
+        return self.render('admin/childrendbill.html', student=student)

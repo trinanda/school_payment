@@ -1,0 +1,49 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+    {{ super() }}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1">
+                {% if current_user.is_authenticated %}
+                    <h1>Welcome {{ current_user.name }}</h1>
+                {% else %}
+                    <h1>Welcome</h1>
+                {% endif %}
+
+                {% if not current_user.is_authenticated %}
+                <p>
+                    <a class="btn btn-primary" href="{{ url_for('security.login') }}">login</a> <a class="btn btn-default" href="{{ url_for('security.register') }}">register</a>
+                </p>
+                {% endif %}
+
+                {% if current_user.has_role('parent') %}
+                    <p>student {{ student }}</p>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Student Registration Number</th>
+                            <th scope="col">Total Bill</th>
+                            <th scope="col">Pay</th>
+                        </tr>
+                        </thead>
+                        {% for data in student %}
+                        <tbody>
+                        <tr>
+                            <th scope="row">3</th>
+                            <td>{{ data[0] }}</td>
+                            <td>{{ data[1] }}</td>
+                            <td>${{ data[2] }} USD</td>
+                            <td>
+                                <button class="btn btn-primary">Check-out</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock body %}

@@ -9,38 +9,10 @@
                 {% else %}
                     <h1>Welcome</h1>
                 {% endif %}
-
                 {% if not current_user.is_authenticated %}
                 <p>
                     <a class="btn btn-primary" href="{{ url_for('security.login') }}">login</a> <a class="btn btn-default" href="{{ url_for('security.register') }}">register</a>
                 </p>
-                {% endif %}
-
-                {% if current_user.has_role('parent') %}
-                    <p>this is your id {{ current_user.id }}</p>
-                    <p>student {{ student }}</p>
-                    <table class="table table-striped">
-                      <thead>
-                        <tr>
-                          <th scope="col">#</th>
-                          <th scope="col">Name</th>
-                          <th scope="col">Student Registration Number</th>
-                          <th scope="col">Total Bill</th>
-                          <th scope="col">Pay</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <th scope="row">3</th>
-                          <td>Larry</td>
-                          <td>JHJ23H4J23</td>
-                          <td>$50 USD</td>
-                          <td>
-                              <button class="btn btn-primary">Check-out</button>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
                 {% endif %}
             </div>
         </div>
