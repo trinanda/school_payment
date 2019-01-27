@@ -79,17 +79,17 @@ class Student(db.Model):
 
 
 class BillStatus(enum.Enum):
-    PENDING = 'Pending'
-    COMPLETED = 'Completed'
+    PENDING = 'PENDING'
+    COMPLETED = 'COMPLETED'
 
 
 class Bill(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    bill_status = db.Column(db.Enum(BillStatus, name='bill_status', default=BillStatus.PENDING))
+    bill_status = db.Column(db.Enum(BillStatus, name='bill_status', default=BillStatus.PENDING.value))
     total_bill = db.Column(db.Integer)
     created_at = db.Column(db.DateTime, default=datetime.utcnow())
     updated_at = db.Column(db.DateTime, default=datetime.utcnow())
-    student = db.relationship('Student', backref=db.backref('Bill'))
-
+    student = db.relationship('Student', backref=db.backref('Bill'), uselist=False)
+    school_id = db.Column(db.Integer, db.ForeignKey('school.id'))
     def __repr__(self):
         return '${} USD'.format(self.total_bill)

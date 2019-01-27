@@ -10,7 +10,7 @@ from flask_security import current_user
 from werkzeug.security import generate_password_hash
 
 from app import db
-from app.models import Student, Parent, User
+from app.models import Student, Parent, User, BillStatus, School, Bill
 
 
 def generator_random(size=10, chars=string.ascii_uppercase + string.digits):
@@ -116,16 +116,33 @@ class StudentModelView(SchoolAdminAccess):
 
 
 class BillModelView(SchoolAdminAccess):
-    # column_list = ('student_id', 'total_bill')
-    form_excluded_columns = ('created_at', 'updated_at')
-    # can_create = False
-    # can_edit = False
-    # can_delete = False
-    # can_export = True
+    column_list = ('student', 'total_bill', 'bill_status', 'created_at', 'updated_at')
+    form_excluded_columns = ('created_at', 'updated_at', 'bill_status')
     edit_modal = True
     create_modal = True
     can_view_details = True
     details_modal = True
+    can_edit = False
+
+    def on_model_change(self, form, model, is_created):
+        if is_created:
+            model.bill_status = BillStatus.PENDING.value
+            model.school_id = current_user.id
+
+    def get_query(self):
+        # return Student.query.filter_by(school_id=current_user.id)
+        return self.session.query(self.model).filter(
+            Bill.school_id == current_user.id
+        )
+
+    def get_count_query(self):
+        return self.session.query(func.count('*')).select_from(self.model).filter(
+            Bill.school_id == current_user.id
+        )
+
+    # can_create = False
+    # can_delete = False
+    # can_export = True
     #
     # column_editable_list = ['total_bill']
     # column_searchable_list = column_editable_list
