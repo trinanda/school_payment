@@ -1,63 +1,9 @@
 from datetime import datetime
 import enum
 
-from flask_login import UserMixin
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask_security import UserMixin, RoleMixin
 
-from app import db, login
-
-
-class Parent(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
-    email = db.Column(db.String(120), index=True, unique=True)
-    password_hash = db.Column(db.String(128))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow())
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow())
-    active = db.Column(db.Boolean())
-
-    def __repr__(self):
-        return 'ID: {} |*| Name: {}'.format(self.id, self.name)
-
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
-
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-
-
-@login.user_loader
-def load_user(id):
-    return Parent.query.get(int(id))
-
-
-class Student(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    student_registration_number = db.Column(db.String(120), index=True, unique=True)
-    name = db.Column(db.String(100))
-    major = db.Column(db.String(50))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow())
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow())
-    parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'))
-    school_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    parent = db.relationship('Parent', backref=db.backref('student', lazy='dynamic'))
-
-    def __repr__(self):
-        return 'Registration Number: {} |*| Name: {}'.format(self.student_registration_number, self.name)
-
-
-class BillStatus(enum.Enum):
-    PENDING = 'Pending'
-    COMPLETED = 'Completed'
-
-
-class Bill(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
-    bill_status = db.Column(db.Enum(BillStatus, name='bill_status', default=BillStatus.PENDING))
-    total_bill = db.Column(db.Integer)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow())
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow())
+from app import db
 
 
 roles_users = db.Table(
@@ -66,8 +12,6 @@ roles_users = db.Table(
     db.Column('role_id', db.Integer(), db.ForeignKey('role.id'))
 )
 
-
-from flask_security import UserMixin, RoleMixin
 
 class Role(db.Model, RoleMixin):
     id = db.Column(db.Integer(), primary_key=True)
@@ -91,3 +35,37 @@ class User(db.Model, UserMixin):
 
     def __str__(self):
         return self.email
+
+
+class Parent(User):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+        return 'ID: {} |*| Name: {}'.format(self.id, self.name)
+
+
+class Student(User):
+    id = db.Column(db.Integer, primary_key=True)
+    student_registration_number = db.Column(db.String(120), index=True, unique=True)
+    name = db.Column(db.String(100))
+    major = db.Column(db.String(50))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+        return 'Registration Number: {} |*| Name: {}'.format(self.student_registration_number, self.name)
+
+
+class BillStatus(enum.Enum):
+    PENDING = 'Pending'
+    COMPLETED = 'Completed'
+
+
+class Bill(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
+    bill_status = db.Column(db.Enum(BillStatus, name='bill_status', default=BillStatus.PENDING))
+    total_bill = db.Column(db.Integer)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow())
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow())

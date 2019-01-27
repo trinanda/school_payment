@@ -64,13 +64,28 @@ class SchoolAdminAccess(sqla.ModelView):
                 return redirect(url_for('security.login', next=request.url))
 
 
-# class ParentModelView(SchoolAdminAccess):
-#
-#     form_excluded_columns = ('created_at', 'updated_at')
-#
-#     # def on_model_change(self, form, model, is_created):
-#     #     if form.password_hash.data:
-#     #         model.password_hash = generate_password_hash(form.password_hash.data)
+class ParentAccess(sqla.ModelView):
+
+    def is_accessible(self):
+        if not current_user.is_active or not current_user.is_authenticated:
+            return False
+        if current_user.has_role('parent'):
+            return True
+
+        return False
+
+    def _handle_view(self, name, **kwargs):
+        """
+        Override builtin _handle_view in order to redirect users when a view is not accessible.
+        """
+        if not self.is_accessible():
+            if current_user.is_authenticated:
+                # permission denied
+                abort(403)
+            else:
+                # login
+                return redirect(url_for('security.login', next=request.url))
+
 
 
 class StudentModelView(SchoolAdminAccess):
@@ -120,4 +135,11 @@ class RoleModelView(SuperUseAccess):
 
 
 class UserModelView(SuperUseAccess):
-    pass
+    column_list = ('name', 'email', 'roles', 'active', 'created_at', 'updated_at')
+    form_excluded_columns = ('created_at', 'updated_at')
+    column_exclude_list = ('password')
+
+    edit_modal = True
+    create_modal = True
+    can_view_details = True
+    details_modal = True

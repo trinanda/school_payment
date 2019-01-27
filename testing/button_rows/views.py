@@ -33,7 +33,6 @@ class StudentView(sqla.ModelView):
                 <input id="student_id" name="student_id"  type="hidden" value="{student_id}">
                 <button type='submit'>Checkout</button>
             </form>
-            <a href="https://www.google.com" target='_blank'>go to google</a>
         '''.format(checkout_url=checkout_url, student_id=model.id)
 
         return Markup(_html)

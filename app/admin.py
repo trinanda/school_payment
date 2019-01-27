@@ -3,7 +3,7 @@ from flask import url_for
 from flask_admin import helpers as admin_helpers
 
 from app import app, db, security
-from app.models import Parent, Student, Bill, Role, User
+from app.models import Student, Bill, Role, User
 from app.modelview import StudentModelView, BillModelView, RoleModelView, UserModelView
 
 admin = flask_admin.Admin(app, 'Admin Dashboard',
