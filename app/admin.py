@@ -7,7 +7,7 @@ from app.models import Student, Bill, Role, Parent, School
 from app.modelview import StudentModelView, BillModelView, RoleModelView, ParentModelView, \
     SchoolModelView
 
-admin = flask_admin.Admin(app, 'Admin Dashboard',
+admin = flask_admin.Admin(app, '#',
                           base_template='my_master.html',
                           template_mode='bootstrap3')
 
