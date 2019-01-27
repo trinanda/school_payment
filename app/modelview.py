@@ -2,15 +2,11 @@ import random
 import string
 
 from flask import abort, redirect, url_for, request
-from flask_admin import expose, BaseView
 from flask_admin.contrib import sqla
-from flask_admin.model.template import EndpointLinkRowAction
 from sqlalchemy import func
 from flask_security import current_user
-from werkzeug.security import generate_password_hash
 
-from app import db
-from app.models import Student, Parent, User, BillStatus, School, Bill
+from app.models import Student, Parent, BillStatus, Bill
 
 
 def generator_random(size=10, chars=string.ascii_uppercase + string.digits):
@@ -86,7 +82,6 @@ class ParentAccess(sqla.ModelView):
             else:
                 # login
                 return redirect(url_for('security.login', next=request.url))
-
 
 
 class StudentModelView(SchoolAdminAccess):
@@ -167,20 +162,6 @@ class UserModelView(SuperUseAccess):
     create_modal = True
     can_view_details = True
     details_modal = True
-
-
-    # def create_model(self, form):
-    #     # if is_created:
-    #     parent = Parent()
-    #     form.populate_obj(parent)
-    #
-    #     parent.id = form.populate_obj
-    #
-    #     self.session.add(parent)
-    #     self.session.commit()
-    #
-    #     return True
-    #
 
 
 class ParentModelView(SchoolAdminAccess):
