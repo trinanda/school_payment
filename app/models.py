@@ -72,8 +72,11 @@ class Student(db.Model):
     school_id = db.Column(db.Integer, db.ForeignKey('school.id'))
     parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'))
 
+    parent = db.relationship('Parent', backref=db.backref('Student', lazy='dynamic'))
+
+
     def __repr__(self):
-        return 'Registration Number: {} |*| Name: {}'.format(self.student_registration_number, self.name)
+        return 'Student Registration Number: {} |*| Name: {}'.format(self.student_registration_number, self.name)
 
 
 class BillStatus(enum.Enum):

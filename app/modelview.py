@@ -90,7 +90,7 @@ class ParentAccess(sqla.ModelView):
 
 
 class StudentModelView(SchoolAdminAccess):
-    form_columns = ['name', 'major', 'parent_id']
+    # form_columns = ['name', 'major']
     column_exclude_list = ('created_at', 'updated_at')
     edit_modal = True
     create_modal = True
@@ -111,7 +111,7 @@ class StudentModelView(SchoolAdminAccess):
 
     def on_model_change(self, form, model, is_created):
         if is_created:
-            model.parent_id = current_user.id
+            model.school_id = current_user.id
             model.student_registration_number = generator_random()
 
 
