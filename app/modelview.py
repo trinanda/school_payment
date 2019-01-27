@@ -9,7 +9,8 @@ from sqlalchemy import func
 from flask_security import current_user
 from werkzeug.security import generate_password_hash
 
-from app.models import Student
+from app import db
+from app.models import Student, Parent, User
 
 
 def generator_random(size=10, chars=string.ascii_uppercase + string.digits):
@@ -46,7 +47,7 @@ class SchoolAdminAccess(sqla.ModelView):
     def is_accessible(self):
         if not current_user.is_active or not current_user.is_authenticated:
             return False
-        if current_user.has_role('schooladmin'):
+        if current_user.has_role('school'):
             return True
 
         return False
@@ -64,33 +65,52 @@ class SchoolAdminAccess(sqla.ModelView):
                 return redirect(url_for('security.login', next=request.url))
 
 
-# class ParentModelView(SchoolAdminAccess):
-#
-#     form_excluded_columns = ('created_at', 'updated_at')
-#
-#     # def on_model_change(self, form, model, is_created):
-#     #     if form.password_hash.data:
-#     #         model.password_hash = generate_password_hash(form.password_hash.data)
+class ParentAccess(sqla.ModelView):
+
+    def is_accessible(self):
+        if not current_user.is_active or not current_user.is_authenticated:
+            return False
+        if current_user.has_role('parent'):
+            return True
+
+        return False
+
+    def _handle_view(self, name, **kwargs):
+        """
+        Override builtin _handle_view in order to redirect users when a view is not accessible.
+        """
+        if not self.is_accessible():
+            if current_user.is_authenticated:
+                # permission denied
+                abort(403)
+            else:
+                # login
+                return redirect(url_for('security.login', next=request.url))
+
 
 
 class StudentModelView(SchoolAdminAccess):
-
+    column_exclude_list = ('created_at', 'updated_at')
+    edit_modal = True
+    create_modal = True
+    can_view_details = True
+    details_modal = True
     form_excluded_columns = ('student_registration_number', 'created_at', 'updated_at')
 
-    def get_query(self):
-        # return Student.query.filter_by(school_id=current_user.id)
-        return self.session.query(self.model).filter(
-            Student.school_id == current_user.id
-        )
-
-    def get_count_query(self):
-        return self.session.query(func.count('*')).select_from(self.model).filter(
-            Student.school_id == current_user.id
-        )
-
+    # def get_query(self):
+    #     # return Student.query.filter_by(school_id=current_user.id)
+    #     return self.session.query(self.model).filter(
+    #         Student.school_id == current_user.id
+    #     )
+    #
+    # def get_count_query(self):
+    #     return self.session.query(func.count('*')).select_from(self.model).filter(
+    #         Student.school_id == current_user.id
+    #     )
+    #
     def on_model_change(self, form, model, is_created):
         if is_created:
-            model.school_id = current_user.id
+            model.parent_id = current_user.id
             model.student_registration_number = generator_random()
 
 
@@ -120,4 +140,45 @@ class RoleModelView(SuperUseAccess):
 
 
 class UserModelView(SuperUseAccess):
+    column_list = ('name', 'email', 'roles', 'active', 'created_at', 'updated_at')
+    form_excluded_columns = ('created_at', 'updated_at')
+    column_exclude_list = ('password')
+
+    # form_columns = ['roles', 'id', 'email', 'password', 'active']
+
+    edit_modal = True
+    create_modal = True
+    can_view_details = True
+    details_modal = True
+
+
+    # def create_model(self, form):
+    #     # if is_created:
+    #     parent = Parent()
+    #     form.populate_obj(parent)
+    #
+    #     parent.id = form.populate_obj
+    #
+    #     self.session.add(parent)
+    #     self.session.commit()
+    #
+    #     return True
+    #
+
+
+class ParentModelView(SchoolAdminAccess):
     pass
+
+
+class SchoolModelView(SuperUseAccess):
+    column_list = ('name', 'email', 'roles', 'active')
+    form_excluded_columns = ('created_at', 'updated_at')
+    column_exclude_list = ('password')
+
+    # form_columns = ['roles', 'id', 'email', 'password', 'active']
+
+    edit_modal = True
+    create_modal = True
+    can_view_details = True
+    details_modal = True
+

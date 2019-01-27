@@ -9,3 +9,5 @@ Flask-Bootstrap         ==          3.3.7.1
 requests                ==          2.21.0
 Flask-Admin             ==          1.5.3
 Flask-Security          ==          3.0.0
+paypalrestsdk           ==          1.13.1
+mysqlclient             ==          1.4.1
