@@ -47,7 +47,7 @@ class User(db.Model, UserMixin):
 class Parent(User):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
+    school_id = db.Column(db.Integer, db.ForeignKey('school.id'))
     __mapper_args__ = {
         'polymorphic_identity': 'parent',
         'with_polymorphic': '*'

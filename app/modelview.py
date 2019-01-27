@@ -90,6 +90,7 @@ class ParentAccess(sqla.ModelView):
 
 
 class StudentModelView(SchoolAdminAccess):
+    form_columns = ['name', 'major', 'parent_id']
     column_exclude_list = ('created_at', 'updated_at')
     edit_modal = True
     create_modal = True
@@ -97,17 +98,17 @@ class StudentModelView(SchoolAdminAccess):
     details_modal = True
     form_excluded_columns = ('student_registration_number', 'created_at', 'updated_at')
 
-    # def get_query(self):
-    #     # return Student.query.filter_by(school_id=current_user.id)
-    #     return self.session.query(self.model).filter(
-    #         Student.school_id == current_user.id
-    #     )
-    #
-    # def get_count_query(self):
-    #     return self.session.query(func.count('*')).select_from(self.model).filter(
-    #         Student.school_id == current_user.id
-    #     )
-    #
+    def get_query(self):
+        # return Student.query.filter_by(school_id=current_user.id)
+        return self.session.query(self.model).filter(
+            Student.school_id == current_user.id
+        )
+
+    def get_count_query(self):
+        return self.session.query(func.count('*')).select_from(self.model).filter(
+            Student.school_id == current_user.id
+        )
+
     def on_model_change(self, form, model, is_created):
         if is_created:
             model.parent_id = current_user.id
@@ -167,7 +168,26 @@ class UserModelView(SuperUseAccess):
 
 
 class ParentModelView(SchoolAdminAccess):
-    pass
+    form_excluded_columns = ('created_at', 'updated_at', 'roles')
+    column_exclude_list = ('password')
+    edit_modal = True
+    create_modal = True
+    can_view_details = True
+    details_modal = True
+
+    def get_query(self):
+        return self.session.query(self.model).filter(
+            Parent.school_id == current_user.id
+        )
+
+    def get_count_query(self):
+        return self.session.query(func.count('*')).select_from(self.model).filter(
+            Parent.school_id == current_user.id
+        )
+
+    def on_model_change(self, form, model, is_created):
+        if is_created:
+            model.school_id = current_user.id
 
 
 class SchoolModelView(SuperUseAccess):
@@ -175,10 +195,7 @@ class SchoolModelView(SuperUseAccess):
     form_excluded_columns = ('created_at', 'updated_at')
     column_exclude_list = ('password')
 
-    # form_columns = ['roles', 'id', 'email', 'password', 'active']
-
     edit_modal = True
     create_modal = True
     can_view_details = True
     details_modal = True
-
