@@ -19,4 +19,4 @@ from app.models import User, Role
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
 
-from app import admin, models, parent
+from app import admin, models, payment

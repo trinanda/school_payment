@@ -2,9 +2,8 @@ import random
 import string
 
 from flask import abort, redirect, url_for, request
-from flask_admin import expose, BaseView, AdminIndexView
+from flask_admin import expose, BaseView
 from flask_admin.contrib import sqla
-from flask_admin.model import BaseModelView
 from sqlalchemy import func
 from flask_security import current_user
 
@@ -136,9 +135,6 @@ class UserModelView(SuperUseAccess):
     column_list = ('name', 'email', 'roles', 'active', 'created_at', 'updated_at')
     form_excluded_columns = ('created_at', 'updated_at')
     column_exclude_list = ('password')
-
-    # form_columns = ['roles', 'id', 'email', 'password', 'active']
-
     edit_modal = True
     create_modal = True
     can_view_details = True
@@ -185,11 +181,9 @@ class ParentView(BaseView):
     def index(self):
         student = db.session.query(Student.id, Student.name, Student.student_registration_number,
                                    Bill.total_bill).join(Bill).filter(Student.bill_id == Bill.id).\
-            filter(Student.parent_id==current_user.id).all()
+            filter(Student.parent_id == current_user.id).all()
         print('test', student)
-        return self.render('admin/childrendbill.html', student=student)
-
-
+        return self.render('admin/studen_bills.html', student=student)
 
 # TODO
 # default role or set parent role when registered parent account by school account
