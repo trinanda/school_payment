@@ -166,6 +166,7 @@ class ParentModelView(SchoolAdminAccess):
     def on_model_change(self, form, model, is_created):
         if is_created:
             model.school_id = current_user.id
+            # model.roles = ['parent']
 
 
 class SchoolModelView(SuperUseAccess):
@@ -182,8 +183,13 @@ class SchoolModelView(SuperUseAccess):
 class ParentView(BaseView):
     @expose('/')
     def index(self):
-        student = db.session.query(Student.name, Student.student_registration_number,
+        student = db.session.query(Student.id, Student.name, Student.student_registration_number,
                                    Bill.total_bill).join(Bill).filter(Student.bill_id == Bill.id).\
             filter(Student.parent_id==current_user.id).all()
         print('test', student)
         return self.render('admin/childrendbill.html', student=student)
+
+
+
+# TODO
+# default role or set parent role when registered parent account by school account

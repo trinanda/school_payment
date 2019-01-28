@@ -64,12 +64,15 @@ def register():
     return render_template('register.html', form=form)
 
 
-@app.route('/billing_details/<student_id>')
+@app.route('/checkout/<student_id>')
 @login_required
-def billing_details(student_id):
-    student_data = Student.query.filter_by(id=student_id).first()
-    bill_total = db.session.query(Bill.total_bill).filter_by(student_id=student_id).first()
-    return render_template('billing_details.html', student_data=student_data, bill_total=bill_total)
+def checkout(student_id):
+    student = db.session.query(Student.id, Student.name, Student.student_registration_number,
+                               Student.major, Bill.total_bill).join(Bill).\
+        filter(Student.bill_id == Bill.id). filter(Student.id == student_id).first()
+    print('test', student)
+    # bill = db.session.query(Bill.total_bill).filter_by(student=student_id).first()
+    return render_template('billing_details.html', student=student)
 
 
 @app.route('/payment/<student_id>', methods=['POST'])

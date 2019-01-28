@@ -17,7 +17,7 @@ admin.add_view(BillModelView(Bill, db.session))
 admin.add_view(RoleModelView(Role, db.session))
 admin.add_view(ParentModelView(Parent, db.session))
 admin.add_view(SchoolModelView(School, db.session))
-admin.add_view(ParentView(name='Your Children Bill', endpoint='yourchildrendbill'))
+admin.add_view(ParentView(name='Student Bill', endpoint='yourchildrendbill'))
 
 
 # define a context processor for merging flask-admin's template context into the flask-security views.
