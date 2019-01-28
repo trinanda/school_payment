@@ -75,17 +75,3 @@ def execute(student_id):
     else:
         print(payment.error)
     return jsonify({'success': success})
-
-# @app.route('/execute/<student_id>', methods=['POST'])
-# def execute(student_id):
-#     ##
-#     bill = Bill.query.filter_by(student_id=student_id).first()
-#     student_bill = db.session.query(Bill.total_bill).filter_by(student_id=student_id).first()
-#     student_bill = list(student_bill)[0]
-#     bill_total = bill.total_bill - student_bill
-#     try:
-#         bill.bill_status = BillStatus.COMPLETED.value
-#         bill.total_bill = bill_total
-#         db.session.commit()
-#     except Exception as e:
-#         return {'error': str(e)}
