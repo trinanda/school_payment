@@ -5,10 +5,10 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config(object):
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
 
-    # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-    #     'sqlite:///' + os.path.join(basedir, 'app.db')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+        'sqlite:///' + os.path.join(basedir, 'app.db')
     # SQLALCHEMY_DATABASE_URI = 'postgresql://tri:321123#@localhost/school_payment'
-    SQLALCHEMY_DATABASE_URI = 'mysql://root:#Admin123@localhost/school_payment'
+    # SQLALCHEMY_DATABASE_URI = 'mysql://root:#Admin123@localhost/school_payment'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = True
 
