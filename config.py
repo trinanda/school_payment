@@ -29,3 +29,5 @@ class Config(object):
     # Flask-Security features
     SECURITY_REGISTERABLE = True
     SECURITY_SEND_REGISTER_EMAIL = False
+
+    LOG_TO_STDOUT = os.environ.get('LOG_TO_STDOUT')

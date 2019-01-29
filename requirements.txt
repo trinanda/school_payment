@@ -10,3 +10,5 @@ Flask-Admin             ==          1.5.3
 Flask-Security          ==          3.0.0
 paypalrestsdk           ==          1.13.1
 mysqlclient             ==          1.4.1
+psycopg2                ==          2.7.7
+gunicorn                ==          19.9.0
