@@ -6,12 +6,11 @@ from app import app, db
 from app.models import Student, Bill, BillStatus
 from config import Config
 
-config = Config()
 
 paypalrestsdk.configure({
   "mode": "sandbox",    # sandbox or live
-  "client_id": config.CLIENT_ID,
-  "client_secret": config.CLIENT_SECRET})
+  "client_id": Config.CLIENT_ID,
+  "client_secret": Config.CLIENT_SECRET})
 
 
 @app.route('/checkout/<student_id>')
