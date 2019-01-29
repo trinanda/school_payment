@@ -31,3 +31,6 @@ class Config(object):
     SECURITY_SEND_REGISTER_EMAIL = False
 
     LOG_TO_STDOUT = os.environ.get('LOG_TO_STDOUT')
+
+    CLIENT_ID = os.environ.get('CLIENT_ID')
+    CLIENT_SECRET = os.environ.get('CLIENT_SECRET')

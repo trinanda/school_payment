@@ -4,12 +4,14 @@ from flask_login import login_required
 
 from app import app, db
 from app.models import Student, Bill, BillStatus
+from config import Config
 
+config = Config()
 
 paypalrestsdk.configure({
   "mode": "sandbox",    # sandbox or live
-  "client_id": "AVPgs8oh9gF92zOhcXhR8CE7jW2byuDPgq1AHFILOhDu9ijlsqJUDGYRx-48kaUxuyzIUv-opTw50FL_",
-  "client_secret": "EGBwKFjVmOzzll6Tgp5VK8u1I9HyMjwZMhq1K29YThDyHkDJMZPBXkYzaeBly-IsZ8udwfqK1-mfy66X"})
+  "client_id": config.CLIENT_ID,
+  "client_secret": config.CLIENT_SECRET})
 
 
 @app.route('/checkout/<student_id>')
