@@ -14,6 +14,7 @@ roles_users = db.Table(
 
 
 class Role(db.Model, RoleMixin):
+    __tablename__ = 'role'
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
@@ -23,6 +24,7 @@ class Role(db.Model, RoleMixin):
 
 
 class User(db.Model, UserMixin):
+    __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200))
     email = db.Column(db.String(120), index=True, unique=True)
@@ -31,36 +33,23 @@ class User(db.Model, UserMixin):
     created_at = db.Column(db.DateTime, default=datetime.utcnow())
     updated_at = db.Column(db.DateTime, default=datetime.utcnow())
     roles = db.relationship('Role', secondary=roles_users,
-                            # enable_typechecks=False,
-                            backref=db.backref('users', lazy='dynamic'))
-
-    __mapper_args__ = {
-        'polymorphic_identity': 'user',
-        'with_polymorphic': '*'
-    }
+                            backref=db.backref('users', lazy='dynamic', enable_typechecks=False))
 
     def __str__(self):
         return self.email
 
 
 class Parent(User):
+    __tablename__ = 'parent'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     school_id = db.Column(db.Integer, db.ForeignKey('school.id'))
-    __mapper_args__ = {
-        'polymorphic_identity': 'parent',
-        'with_polymorphic': '*'
-    }
 
 
 class School(User):
+    __tablename__ = 'school'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-    __mapper_args__ = {
-        'polymorphic_identity': 'school',
-        'with_polymorphic': '*'
-    }
 
 
 class Student(db.Model):

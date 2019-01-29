@@ -8,7 +8,7 @@ from sqlalchemy import func
 from flask_security import current_user
 
 from app import db
-from app.models import Student, Parent, BillStatus, Bill
+from app.models import Student, Parent, BillStatus, Bill, roles_users, Role
 
 
 def generator_random(size=10, chars=string.ascii_uppercase + string.digits):
@@ -161,8 +161,10 @@ class ParentModelView(SchoolAdminAccess):
 
     def on_model_change(self, form, model, is_created):
         if is_created:
-            model.school_id = current_user.id
-            # model.roles = ['parent']
+            _parent_role = Role.query.filter(Role.name == 'parent').first()
+            if _parent_role:
+                model.school_id = current_user.id
+                model.roles = [_parent_role]
 
 
 class SchoolModelView(SuperUseAccess):
@@ -184,6 +186,3 @@ class ParentView(BaseView):
             filter(Student.parent_id == current_user.id).all()
         print('test', student)
         return self.render('admin/studen_bills.html', student=student)
-
-# TODO
-# default role or set parent role when registered parent account by school account
