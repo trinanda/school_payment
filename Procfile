@@ -1,1 +1,1 @@
-web: flask db migrate -m '.'; flask db upgrade; gunicorn app:app
+web: mkdir migrations/versions; flask db migrate -m '.'; flask db upgrade; gunicorn app:app
