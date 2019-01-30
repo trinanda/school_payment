@@ -19,6 +19,9 @@ def checkout(student_id):
     student = db.session.query(Student.id, Student.name, Student.student_registration_number,
                                Student.major, Bill.total_bill).join(Bill).\
         filter(Student.bill_id == Bill.id). filter(Student.id == student_id).first()
+
+    print('test CLIENT_ID', Config.CLIENT_ID)
+    print('test CLIENT_SECRET', Config.CLIENT_SECRET)
     return render_template('checkout.html', student=student)
 
 

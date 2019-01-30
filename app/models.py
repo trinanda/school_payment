@@ -82,5 +82,6 @@ class Bill(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow())
     student = db.relationship('Student', backref=db.backref('Bill'), uselist=False)
     school_id = db.Column(db.Integer, db.ForeignKey('school.id'))
+
     def __repr__(self):
         return '${} USD'.format(self.total_bill)
