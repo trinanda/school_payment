@@ -41,4 +41,4 @@ def create_app(config_class=Config):
                 app.logger.info('School Payment startup')
     return app
 
-from app import admin, models, payment
+from app import admin, models, payment, errors
