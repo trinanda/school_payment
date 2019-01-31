@@ -64,14 +64,17 @@ class SchoolAdminAccess(sqla.ModelView):
 
 
 class StudentModelView(SchoolAdminAccess):
-    # form_columns = ['name', 'major']
-    column_list = ('name', 'student_registration_number', 'major', 'parent', 'created_at', 'updated_at', 'Bill')
-    # column_exclude_list = ('created_at', 'updated_at')
     edit_modal = True
     create_modal = True
     can_view_details = True
     details_modal = True
+    can_export = True
+    can_delete = False
+    column_list = ('name', 'student_registration_number', 'major', 'parent', 'created_at', 'updated_at', 'Bill')
     form_excluded_columns = ('student_registration_number', 'created_at', 'updated_at', 'Bill')
+    column_editable_list = ['parent']
+    column_searchable_list = ['name', 'student_registration_number']
+    column_filters = ['name', 'student_registration_number']
 
     def get_query(self):
         # return Student.query.filter_by(school_id=current_user.id)
@@ -98,6 +101,10 @@ class BillModelView(SchoolAdminAccess):
     can_view_details = True
     details_modal = True
     can_edit = False
+    can_delete = False
+    can_export = True
+    column_searchable_list = ['total_bill', 'bill_status']
+    column_filters = ['student']
 
     def on_model_change(self, form, model, is_created):
         if is_created:
@@ -114,17 +121,6 @@ class BillModelView(SchoolAdminAccess):
         return self.session.query(func.count('*')).select_from(self.model).filter(
             Bill.school_id == current_user.id
         )
-
-    # can_create = False
-    # can_delete = False
-    # can_export = True
-    #
-    # column_editable_list = ['total_bill']
-    # column_searchable_list = column_editable_list
-    # column_exclude_list = ['total_bill']
-    # form_excluded_columns = column_exclude_list
-    # column_details_exclude_list = column_exclude_list
-    # column_filters = column_editable_list
 
 
 class RoleModelView(SuperUseAccess):
@@ -148,6 +144,12 @@ class ParentModelView(SchoolAdminAccess):
     create_modal = True
     can_view_details = True
     details_modal = True
+    can_delete = False
+    column_filters = ['name', 'email', 'active']
+    column_searchable_list = ['name', 'email']
+    can_export = True
+    column_list = ('name', 'email', 'active', 'Student', 'created_at', 'updated_at')
+    column_editable_list = ['Student']
 
     def get_query(self):
         return self.session.query(self.model).filter(
@@ -171,11 +173,14 @@ class SchoolModelView(SuperUseAccess):
     column_list = ('name', 'email', 'roles', 'active')
     form_excluded_columns = ('created_at', 'updated_at')
     column_exclude_list = ('password')
-
     edit_modal = True
     create_modal = True
     can_view_details = True
     details_modal = True
+    can_export = True
+    column_editable_list = ['name', 'email']
+    column_searchable_list = ['name', 'email']
+    column_filters = column_editable_list
 
 
 class ParentView(BaseView):

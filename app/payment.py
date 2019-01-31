@@ -18,16 +18,14 @@ paypalrestsdk.configure({
 def checkout(student_id):
     student = db.session.query(Student.id, Student.name, Student.student_registration_number,
                                Student.major, Bill.total_bill).join(Bill).\
-        filter(Student.bill_id == Bill.id). filter(Student.id == student_id).first()
-
-    print('test CLIENT_ID', Config.CLIENT_ID)
-    print('test CLIENT_SECRET', Config.CLIENT_SECRET)
+        filter(Student.bill_id == Bill.id).filter(Student.id == student_id).first()
     return render_template('checkout.html', student=student)
 
 
 @app.route('/payment/<student_id>', methods=['POST'])
 def payment(student_id):
-    student = db.session.query(Student.id, Student.name, Bill.total_bill).filter(Student.id == student_id).first()
+    student = db.session.query(Student.id, Student.name, Bill.total_bill).join(Bill).\
+        filter(Student.id == student_id).first()
     student_name = student.name
     student_bill = student.total_bill
     payment = paypalrestsdk.Payment({
@@ -59,14 +57,17 @@ def payment(student_id):
 
 @app.route('/execute/<student_id>', methods=['POST'])
 def execute(student_id):
-    student = db.session.query(Student.id, Bill.total_bill, Student.bill_id).filter(Student.id == student_id).first()
+    student = db.session.query(Student.id, Student.name, Bill.total_bill, Student.bill_id).join(Bill).\
+        filter(Student.id == student_id).first()
     student_bill = student.total_bill
     bill = db.session.query(Bill).filter_by(id=student.bill_id).first()
-    # print('test', bill.total_bill)
     change_total_bill = bill.total_bill - student_bill
     try:
-        bill.bill_status = BillStatus.COMPLETED.value
         bill.total_bill = change_total_bill
+        if bill.total_bill <= 0:
+            bill.bill_status = BillStatus.COMPLETED.value
+        else:
+            pass
         db.session.commit()
     except Exception as e:
         return {'error': str(e)}
