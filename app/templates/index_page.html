@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>School Tuition Payment</title>
+	<meta charset="UTF-8">
+
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Raleway:400,400i,500,500i,600,600i,700,700i,800,800i" rel="stylesheet">
+
+	<!-- Stylesheets -->
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}"/>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}"/>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/owl.carousel.css') }}"/>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+
+</head>
+<body>
+	<!-- Page Preloder -->
+	<div id="preloder">
+		<div class="loader"></div>
+	</div>
+
+	<!-- Header section -->
+	<header class="header-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-3 col-md-3">
+					<div class="nav-switch">
+						<i class="fa fa-bars"></i>
+					</div>
+				</div>
+				<div class="col-lg-9 col-md-9">
+					<a href="{{ url_for('admin.index') }}" class="site-btn header-btn">Login</a>
+					<!-- <nav class="main-menu">
+						<ul>
+							<li><a style="color: #696969" href="index.html">Home</a></li>
+							<li><a style="color: #696969" href="#">About us</a></li>
+							<li><a style="color: #696969" href="courses.html">Courses</a></li>
+							<li><a style="color: #696969" href="blog.html">News</a></li>
+							<li><a style="color: #696969" href="contact.html">Contact</a></li>
+						</ul>
+					</nav> -->
+				</div>
+			</div>
+		</div>
+	</header>
+	<!-- Header section end -->
+
+	<!-- Hero section -->
+	<section class="hero-section set-bg" data-setbg="{{ url_for('static', filename='images/home-background.jpg') }}" style="width: 1350px; height: 650px;">
+		<div class="container">
+			<div class="hero-text text-white">
+				 <!--<h2 style="color: black;">Get The Best Free Online Courses</h2>-->
+				 <!--<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec malesuada lorem maximus mauris scelerisque, at rutrum nulla <br> dictum. Ut ac ligula sapien. Suspendisse cursus faucibus finibus.</p>-->
+			</div>
+		</div>
+	</section>
+	<!-- Hero section end -->
+
+	<!--====== Javascripts & Jquery ======-->
+	<script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/mixitup.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/circle-progress.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/owl.carousel.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</html>

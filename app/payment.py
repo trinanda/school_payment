@@ -13,6 +13,12 @@ paypalrestsdk.configure({
   "client_secret": Config.CLIENT_SECRET})
 
 
+@app.route('/')
+@app.route('/index')
+def index():
+    return render_template('index_page.html')
+
+
 @app.route('/checkout/<student_id>')
 @login_required
 def checkout(student_id):
